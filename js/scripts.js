@@ -21,6 +21,10 @@ $(function(){
       flashError("#jump","You can't count by zeroes")
       valid = false
     }
+    if (userJump > Math.abs(userTarget)) {
+      flashError("#jump","Must be smaller than number above")
+      valid = false
+    }
     if (valid) {
       console.log("valid")
       appendToDisplay(userTarget,userJump)
@@ -29,6 +33,10 @@ $(function(){
   })
 })
 function flashError(element,errorMessage) {
+  var oldPlaceholder = "Bigger Number"
+  if (element === "#jump") {
+    oldPlaceholder = "Smaller Number"
+  }
   $(element).val("")
   $(element).attr({
     'placeholder':errorMessage,
@@ -48,6 +56,11 @@ function flashError(element,errorMessage) {
         $(element).css({
           'background-color':'#fff'
         })
+        setTimeout(function(){
+          $(element).attr({
+            'placeholder':oldPlaceholder
+          })
+        }, 2000)
       },100)
     },100)
   },100)
