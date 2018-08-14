@@ -3,26 +3,35 @@
 $(function(){
   $('button').click(function(){
     var userTarget = parseInt($('#target').val())
-    var userJump = parseInt($('#jump').val())
+    var userJump = Math.abs(parseInt($('#jump').val()))
     var valid = true
     if (isNaN(userTarget)) {
-      flashError("#target")
+      flashError("#target","Please enter a number")
       valid = false
     }
     if (isNaN(userJump)) {
-      flashError("#jump")
+      flashError("#jump","Please enter a number")
+      valid = false
+    }
+    if (userTarget === 0) {
+      flashError("#target","You can't count to zero")
+      valid = false
+    }
+    if (userJump === 0) {
+      flashError("#jump","You can't count by zeroes")
       valid = false
     }
     if (valid) {
-      appendToDisplay(userJump,userTarget)
+      console.log("valid")
+      appendToDisplay(userTarget,userJump)
       slideResultUp()
     }
   })
 })
-function flashError(element) {
+function flashError(element,errorMessage) {
   $(element).val("")
   $(element).attr({
-    'placeholder':'Please enter a number',
+    'placeholder':errorMessage,
   })
   $(element).css({
     'background-color':'#fbb'
@@ -43,14 +52,25 @@ function flashError(element) {
     },100)
   },100)
 }
-function appendToDisplay(userJump,userTarget) {
+function appendToDisplay(userTarget,userJump) {
   $('#sequence').html('')
-  for (var i=userJump;i<=userTarget;i+=userJump) {
-    var appendage = i + ", "
-    if (i+userJump >= userTarget) {
-      appendage = i
+  if (userTarget > 0) {
+    for (var i=userJump;i<=userTarget;i+=userJump) {
+      var appendage = i + ", "
+      if (i+userJump > userTarget) {
+        appendage = i
+      }
+      $('#sequence').append(appendage)
     }
-    $('#sequence').append(appendage)
+  } else {
+    userJump *= -1
+    for (var i=userJump;i>=userTarget;i+=userJump) {
+      var appendage = i + ", "
+      if (i+userJump < userTarget) {
+        appendage = i
+      }
+      $('#sequence').append(appendage)
+    }
   }
 }
 function slideResultUp() {
